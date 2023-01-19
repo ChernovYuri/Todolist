@@ -1,0 +1,45 @@
+/*
+.App {
+  padding: 30px;
+  display: flex;
+}
+
+.App > div {
+  margin-right: 50px;
+}
+
+.deleteButton {
+  scale: 50%;
+}
+
+.isDone {
+  text-decoration: line-through;
+
+}
+.notIsDone {
+  font-weight: bold;
+}
+
+.openedFilter {
+  color: white;
+  font-weight: bold;
+  background-color: hotpink;
+  border: 1px solid hotpink;
+}
+
+.closedFilter {
+  color: black;
+  font-weight: bold;
+  background-color: whitesmoke;
+  border: 2px solid whitesmoke;
+}
+
+button:hover {
+  background: rgba(0,0,0,0);
+  color: #3a7999;
+  box-shadow: inset 0 0 0 1px #3a7999;
+}
+
+.inputError {
+  border: 2px solid orangered;
+}*/
