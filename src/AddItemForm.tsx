@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
 
@@ -6,9 +6,10 @@ type PropsType = {
     callback: (title: string) => void
 }
 
-export const AddItemForm = (props: PropsType) => {
-    const [title, setTitle] = useState<string>('')
-    const [error, setError] = useState<boolean>(false)
+export const AddItemForm = memo((props: PropsType) => {
+    console.log('AddItemForm rendering')
+    let [title, setTitle] = useState<string>('')
+    let [error, setError] = useState<boolean>(false)
 
     const onClickAddTaskToDoListHandler = () => {
         const trimmedTitle = title.trim()
@@ -59,4 +60,4 @@ export const AddItemForm = (props: PropsType) => {
             <Button variant="contained" style={buttonStyles} onClick={onClickAddTaskToDoListHandler}>+</Button>
         </div>
     );
-};
+})

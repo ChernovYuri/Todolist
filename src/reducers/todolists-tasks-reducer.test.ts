@@ -1,15 +1,15 @@
-import {TodolistsType} from "../App";
 import {addTodolistsAC, removeTodolistsAC, TodolistsReducer} from "./todolistsReducer";
 import {TasksReducer} from "./tasksReducer";
 import {v1} from "uuid";
+import {TodolistType} from "../App";
 
 test('ids should be equals', () => {
     const startTasksState = {}
-    const startTodolistsState: TodolistsType[] = [
-        {id: 'todolistID1', title: 'What to learn', filter: 'all'},
-        {id: 'todolistID2', title: 'What to buy', filter: 'all'},
+    const startTodolistsState: TodolistType[] = [
+        {todolistId: 'todolistID1', todolistTitle: 'What to learn', filter: 'all'},
+        {todolistId: 'todolistID2', todolistTitle: 'What to buy', filter: 'all'},
     ]
-    let newID = v1()
+    let newId = v1()
     const action = addTodolistsAC('New Todolist')
 
     const endTasksState = TasksReducer(startTasksState, action)
@@ -17,23 +17,23 @@ test('ids should be equals', () => {
 
     const keys = Object.keys(endTasksState)
     const idFromTasks = keys[0]
-    const idFromTodolists = endTodolistsState[0].id
+    const idFromTodolists = endTodolistsState[0].todolistId
 
-    expect(idFromTasks).toBe(action.payload.newID)
-    expect(idFromTodolists).toBe(action.payload.newID)
+    expect(idFromTasks).toBe(action.payload.newId)
+    expect(idFromTodolists).toBe(action.payload.newId)
 })
 
 test('property with todolistId should be deleted', () => {
     const startState = {
         'todolistId1': [
-            {id: '1', title: 'CSS', isDone: false},
-            {id: '2', title: 'JS', isDone: true},
-            {id: '3', title: 'React', isDone: false}
+            {taskId: '1', taskTitle: 'CSS', isDone: false},
+            {taskId: '2', taskTitle: 'JS', isDone: true},
+            {taskId: '3', taskTitle: 'React', isDone: false}
         ],
         'todolistId2': [
-            {id: '1', title: 'bread', isDone: false},
-            {id: '2', title: 'milk', isDone: true},
-            {id: '3', title: 'tea', isDone: false}
+            {taskId: '1', taskTitle: 'bread', isDone: false},
+            {taskId: '2', taskTitle: 'milk', isDone: true},
+            {taskId: '3', taskTitle: 'tea', isDone: false}
         ]
     }
 
