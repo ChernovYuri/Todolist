@@ -19,9 +19,9 @@ export const TasksReducer = (state = initialState, action: actionsType) => {
             // })
             return {
                 ...state,
-                [action.payload.todolistId]: state[action.payload.todolistId].map(el => el.taskId === action.payload.taskId ? {
+                [action.payload.todolistId]: state[action.payload.todolistId].map(el => el.id === action.payload.taskId ? {
                     ...el,
-                    taskTitle: action.payload.newTitle
+                    title: action.payload.newTitle
                 } : el)
             }
         }
@@ -32,7 +32,7 @@ export const TasksReducer = (state = initialState, action: actionsType) => {
             // })
             return {
                 ...state,
-                [action.payload.todolistId]: state[action.payload.todolistId].map(el => el.taskId === action.payload.taskId ? {
+                [action.payload.todolistId]: state[action.payload.todolistId].map(el => el.id === action.payload.taskId ? {
                     ...el,
                     isDone: action.payload.newIsDone
                 } : el)
@@ -42,7 +42,7 @@ export const TasksReducer = (state = initialState, action: actionsType) => {
             // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(el => el.id !== taskId)})
             return {
                 ...state,
-                [action.payload.todolistId]: state[action.payload.todolistId].filter(el => el.taskId !== action.payload.taskId)
+                [action.payload.todolistId]: state[action.payload.todolistId].filter(el => el.id !== action.payload.taskId)
             }
         }
         case 'ADD-TODOLIST': {

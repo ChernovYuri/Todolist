@@ -17,8 +17,8 @@ type TodolistPropsType = { /* typing */
 }
 
 export type TaskType = {
-    taskId: string
-    taskTitle: string
+    id: string
+    title: string
     isDone: boolean
 }
 
@@ -26,10 +26,10 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
 
     console.log('Todolist rendering')
 
-    let {todolistId, todolistTitle, filter} = todolist
+    let {id, title, filter} = todolist
 
     const dispatch = useDispatch()
-    let tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[todolistId])
+    let tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[id])
 
     const getFilteredTasks = () => {
         switch (filter) {
@@ -47,29 +47,29 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
     const tasksItems = tasks.length ?
         tasks.map((task: TaskType) => {
             return <Task
-                key={task.taskId}
+                key={task.id}
                 task={task}
-                todolistId={todolistId}
+                todolistId={id}
             />
         })
         : <span>Here will be your tasks</span>  // условный рендеринг (прелоадинг)/контроль списка на пустоту
 
     const getOnClickSetFilterHandler = useCallback((value: FilterValuesType) => () => {
-        dispatch(changeFilterTodolistsAC(todolistId, value))
+        dispatch(changeFilterTodolistsAC(id, value))
 }, [dispatch])
 
     const removeTodolistHandler = useCallback(() => {
-        let action = removeTodolistsAC(todolistId)
+        let action = removeTodolistsAC(id)
         dispatch(action)
     }, [dispatch])
 
     const addTaskHandler = useCallback((title: string) => {
-        let newTask = {taskId: v1(), taskTitle: title, isDone: false}
-        dispatch(addTaskAC(todolistId, title, newTask))
+        let newTask = {id: v1(), title: title, isDone: false}
+        dispatch(addTaskAC(id, title, newTask))
     }, [dispatch])
 
     const updateTodolistHandler = useCallback((newTitle: string) => {
-        dispatch(updateTodolistsAC(todolistId, newTitle))
+        dispatch(updateTodolistsAC(id, newTitle))
     }, [dispatch])
 
 
@@ -77,7 +77,7 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
         <div className="App">
             <div>
                 <h3>
-                    <EditableSpan oldTitle={todolistTitle} callBack={updateTodolistHandler}/>
+                    <EditableSpan oldTitle={title} callBack={updateTodolistHandler}/>
                     <IconButton aria-label="delete" onClick={removeTodolistHandler}>
                         <DeleteIcon/>
                     </IconButton>

@@ -12,17 +12,17 @@ const rootReducer = combineReducers({
 })
 const initialGlobalState = {
     todolists: [
-        {todolistId: 'todolistId1', todolistTitle: 'What to learn', filter: 'all'},
-        {todolistId: 'todolistId2', todolistTitle: 'What to buy', filter: 'all'}
+        {id: 'todolistId1', title: 'What to learn', filter: 'all'},
+        {id: 'todolistId2', title: 'What to buy', filter: 'all'}
     ],
     tasks: {
         ['todolistId1']: [
-            {taskId: v1(), taskTitle: 'HTML&CSS', isDone: true},
-            {taskId: v1(), taskTitle: 'JS', isDone: false}
+            {id: v1(), title: 'HTML&CSS', isDone: true},
+            {id: v1(), title: 'JS', isDone: false}
         ],
         ['todolistId2']: [
-            {taskId: v1(), taskTitle: 'Milk', isDone: true},
-            {taskId: v1(), taskTitle: 'React Book', isDone: false}
+            {id: v1(), title: 'Milk', isDone: true},
+            {id: v1(), title: 'React Book', isDone: false}
         ]
     }
 }

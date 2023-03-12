@@ -11,7 +11,7 @@ import {AppRootStateType} from "./reducers/store";
 import {TaskType, Todolist} from "./Todolist";
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
-export type TodolistType = { todolistId: string, todolistTitle: string, filter: FilterValuesType }
+export type TodolistType = { id: string, title: string, filter: FilterValuesType }
 
 export type TasksType = {
     [key: string]: TaskType[]
@@ -37,7 +37,7 @@ function App() {
                 <Grid container spacing={3}>
                     {todolists.map((todolist) => {
                         return <Grid item
-                                     key={todolist.todolistId}>
+                                     key={todolist.id}>
                             <Paper elevation={18} style={{padding: '10px'}}>
                                 <Todolist
                                     todolist={todolist}

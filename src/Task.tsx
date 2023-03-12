@@ -16,24 +16,24 @@ export const Task = memo(({task, todolistId}: TaskPropsType) => {
     console.log('Task rendering')
     const dispatch = useDispatch()
 
-    const removeTaskHandler = () => dispatch(removeTaskAC(todolistId, task.taskId))
+    const removeTaskHandler = () => dispatch(removeTaskAC(todolistId, task.id))
 
     const changeTaskStatusHandler = useCallback((newIsDone: boolean) => {
-        dispatch(changeTaskStatusAC(todolistId, task.taskId, newIsDone))
-    },[task.taskId])
+        dispatch(changeTaskStatusAC(todolistId, task.id, newIsDone))
+    },[task.id])
 
     const updateTaskHandler = useCallback((newTitle: string) => {
-        dispatch(updateTaskAC(todolistId, task.taskId, newTitle))
-    }, [task.taskId])
+        dispatch(updateTaskAC(todolistId, task.id, newTitle))
+    }, [task.id])
 
 
     return (
-        <li key={task.taskId}>
+        <li key={task.id}>
             <SuperCheckbox checked={task.isDone}
                            callback={(checkedValue) => changeTaskStatusHandler(checkedValue)}/>
-            <EditableSpan oldTitle={task.taskTitle}
+            <EditableSpan oldTitle={task.title}
                           callBack={updateTaskHandler}
-                          taskId={task.taskId}
+                          taskId={task.id}
             />
             <IconButton aria-label="delete" onClick={removeTaskHandler}>
                 <DeleteIcon/>

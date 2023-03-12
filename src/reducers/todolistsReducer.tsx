@@ -8,22 +8,22 @@ export const TodolistsReducer = (state = initialState , action: actionsType) => 
         case 'REMOVE-TODOLIST': {
             // setTodolists(todolists.filter(el => el.id !== todolistID))
             // delete tasks[todolistID]
-            return state.filter(el => el.todolistId !== action.payload.todolistId)
+            return state.filter(el => el.id !== action.payload.todolistId)
         }
         case 'UPDATE-TODOLIST': {
             //  setTodolists(todolists.map(el => el.id === todolistId ? {...el, title: newTitle} : el))
-            return state.map(el => el.todolistId === action.payload.todolistId ? {...el, todolistTitle: action.payload.newTitle} : el)
+            return state.map(el => el.id === action.payload.todolistId ? {...el, todolistTitle: action.payload.newTitle} : el)
         }
         case 'CHANGE-FILTER': {
             //     setTodolists(todolists.map(el => el.id === todolistId ? {...el, filter: value} : el))
-            return state.map(el => el.todolistId === action.payload.todolistId ? {...el, filter: action.payload.value} : el)
+            return state.map(el => el.id === action.payload.todolistId ? {...el, filter: action.payload.value} : el)
         }
         case 'ADD-TODOLIST': {
             // let newID = v1()
             // let newTodo: TodolistsType = {id: newID, title: newTitle, filter: 'all'}
             // setTodolists([newTodo, ...todolists])
             // setTasks({...tasks, [newID]: []})
-            let newTodo: TodolistType = {todolistId: action.payload.newId, todolistTitle: action.payload.newTitle, filter: 'all'}
+            let newTodo: TodolistType = {id: action.payload.newId, title: action.payload.newTitle, filter: 'all'}
             return [newTodo, ...state]
         }
         default:
