@@ -1,5 +1,5 @@
 import React, {memo, useCallback, useMemo} from "react";
-import {FilterValuesType, TodolistType} from "./App";
+// import {TodolistType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import Button from '@mui/material/Button';
@@ -8,19 +8,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Task";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./reducers/store";
-import {changeFilterTodolistsAC, removeTodolistsAC, updateTodolistsAC} from "./reducers/todolistsReducer";
+import {
+    changeFilterTodolistsAC,
+    FilterValuesType,
+    removeTodolistsAC, TodolistDomainType,
+    updateTodolistsAC
+} from "./reducers/todolistsReducer";
 import {v1} from "uuid";
 import {addTaskAC} from "./reducers/tasksReducer";
+import {TaskPriorities, TaskStatuses, TaskType, TodolistType} from "./api/todolist-api";
 
 type TodolistPropsType = { /* typing */
-    todolist: TodolistType
+    todolist: TodolistDomainType
 }
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+// export type TaskType = {
+//     id: string
+//     title: string
+//     status: boolean
+// }
 
 export const Todolist = memo(({todolist}: TodolistPropsType) => {
 
@@ -34,9 +40,9 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
     const getFilteredTasks = () => {
         switch (filter) {
             case "active":
-                return tasks.filter(el => !el.isDone)
+                return tasks.filter(el => !el.status)
             case "completed":
-                return tasks.filter(el => el.isDone)
+                return tasks.filter(el => el.status)
             default:
                 return tasks
         }
@@ -56,7 +62,7 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
 
     const getOnClickSetFilterHandler = useCallback((value: FilterValuesType) => () => {
         dispatch(changeFilterTodolistsAC(id, value))
-}, [dispatch])
+    }, [dispatch])
 
     const removeTodolistHandler = useCallback(() => {
         let action = removeTodolistsAC(id)
@@ -64,7 +70,18 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
     }, [dispatch])
 
     const addTaskHandler = useCallback((title: string) => {
-        let newTask = {id: v1(), title: title, isDone: false}
+        let newTask = {
+            id: v1(),
+            title: title,
+            status: TaskStatuses.New,
+            todoListId: todolist.id,
+            description: '',
+            startDate: '',
+            deadline: '',
+            addedDate: '',
+            order: 0,
+            priority: TaskPriorities.Low
+        }
         dispatch(addTaskAC(id, title, newTask))
     }, [dispatch])
 

@@ -12,11 +12,11 @@
   scale: 50%;
 }
 
-.isDone {
+.status {
   text-decoration: line-through;
 
 }
-.notIsDone {
+.notstatus {
   font-weight: bold;
 }
 

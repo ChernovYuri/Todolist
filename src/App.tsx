@@ -5,20 +5,20 @@ import ButtonAppBar from "./ButtonAppBar";
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import {addTodolistsAC} from "./reducers/todolistsReducer";
+import {addTodolistsAC, TodolistDomainType} from "./reducers/todolistsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./reducers/store";
-import {TaskType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
+import {TaskType, TodolistType} from "./api/todolist-api";
 
-export type FilterValuesType = 'all' | 'active' | 'completed'
-export type TodolistType = { id: string, title: string, filter: FilterValuesType }
+// export type TodolistType = { id: string, title: string, filter: FilterValuesType }
 
 export type TasksType = {
     [key: string]: TaskType[]
 }
 
 function App() {
-    let todolists = useSelector<AppRootStateType, TodolistType[]>(state=>state.todolists);
+    let todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state=>state.todolists);
 
     let dispatch = useDispatch()
 

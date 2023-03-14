@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ComponentMeta, ComponentStory} from '@storybook/react';
-import {action} from "@storybook/addon-actions";
 import {Task} from "../../Task";
 import {ReduxStoreProviderDecorator} from "../decorators/ReduxStoreProviderDecorator";
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../reducers/store";
-import {TaskType} from "../../Todolist";
+import {TaskType} from "../../api/todolist-api";
 
 export default {
     taskTitle: 'TODOLIST/Task',
@@ -13,7 +12,7 @@ export default {
     decorators: [ReduxStoreProviderDecorator],
     /*args: {
         todolistID: 'todolistId',
-        task: {id: 'taskId', title: 'Example of completed task', isDone: true},
+        task: {id: 'taskId', title: 'Example of completed task', status: true},
         removeTask: action('Task removed'),
         changeTaskStatus: action('Task status changed'),
         updateTask: action('Task title updated')
@@ -26,24 +25,24 @@ const TaskCopy = () => {
 }
 
 const Template: ComponentStory<typeof Task> = (args) => <TaskCopy /*{...args}*/ />;
-export const TaskIsDoneStory = Template.bind({});
+export const TaskstatusStory = Template.bind({});
 /*
 
 export const TaskIsNotDoneStory = Template.bind({});
 TaskIsNotDoneStory.args = {
-    task: {id: 'taskId', title: 'Example of not completed task', isDone: false},
+    task: {id: 'taskId', title: 'Example of not completed task', status: false},
 }
 
 const TemplateFull: ComponentStory<typeof Task> = (args) => {
     let [title, setTitle] = useState('Example')
-    let [task, setTask] = useState({id: 'taskId', title: title, isDone: false})
+    let [task, setTask] = useState({id: 'taskId', title: title, status: false})
 
     /!*function removeTask () {
         console.log('Task will be removed')
     }*!/
 
-    function changeTaskStatus (taskId: string, newIsDone: boolean) {
-        setTask({...task, isDone: newIsDone})
+    function changeTaskStatus (taskId: string, newstatus: boolean) {
+        setTask({...task, status: newstatus})
     }
 
     function updateTask (taskId: string, newTitle: string) {
