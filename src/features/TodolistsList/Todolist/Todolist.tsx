@@ -1,22 +1,20 @@
-import React, {memo, useCallback, useMemo} from "react";
-// import {TodolistType} from "./App";
-import {AddItemForm} from "./AddItemForm";
-import {EditableSpan} from "./EditableSpan";
+import React, {memo, useCallback, useEffect} from "react";
+import {AddItemForm} from "../../../components/AddItemForm";
+import {EditableSpan} from "../../../components/EditableSpan";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {Task} from "./Task";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./reducers/store";
+import {Task} from "./Task/Task";
+import {useAppDispatch, useAppSelector} from "../../../app/store";
 import {
     changeFilterTodolistsAC,
+    changeTodoTitleTC,
+    deleteTodoTC,
     FilterValuesType,
-    removeTodolistsAC, TodolistDomainType,
-    updateTodolistsAC
-} from "./reducers/todolistsReducer";
-import {v1} from "uuid";
-import {addTaskAC} from "./reducers/tasksReducer";
-import {TaskPriorities, TaskStatuses, TaskType, TodolistType} from "./api/todolist-api";
+    TodolistDomainType
+} from "../todolistsReducer";
+import {createTaskTC, getTasksTC} from "../tasksReducer";
+import {TaskType} from "../../../api/todolist-api";
 
 type TodolistPropsType = { /* typing */
     todolist: TodolistDomainType
@@ -34,8 +32,12 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
 
     let {id, title, filter} = todolist
 
-    const dispatch = useDispatch()
-    let tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[id])
+    const dispatch = useAppDispatch()
+    let tasks = useAppSelector<TaskType[]>(state => state.tasks[id])
+
+    useEffect(()=>{
+        dispatch(getTasksTC(todolist.id))
+    },[])
 
     const getFilteredTasks = () => {
         switch (filter) {
@@ -65,28 +67,28 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
     }, [dispatch])
 
     const removeTodolistHandler = useCallback(() => {
-        let action = removeTodolistsAC(id)
+        let action = deleteTodoTC(id)
         dispatch(action)
     }, [dispatch])
 
     const addTaskHandler = useCallback((title: string) => {
-        let newTask = {
-            id: v1(),
-            title: title,
-            status: TaskStatuses.New,
-            todoListId: todolist.id,
-            description: '',
-            startDate: '',
-            deadline: '',
-            addedDate: '',
-            order: 0,
-            priority: TaskPriorities.Low
-        }
-        dispatch(addTaskAC(id, title, newTask))
+        // let newTask = {
+        //     id: v1(),
+        //     title: title,
+        //     status: TaskStatuses.New,
+        //     todoListId: todolist.id,
+        //     description: '',
+        //     startDate: '',
+        //     deadline: '',
+        //     addedDate: '',
+        //     order: 0,
+        //     priority: TaskPriorities.Low
+        // }
+        dispatch(createTaskTC(id, title))
     }, [dispatch])
 
     const updateTodolistHandler = useCallback((newTitle: string) => {
-        dispatch(updateTodolistsAC(id, newTitle))
+        dispatch(changeTodoTitleTC(id, newTitle))
     }, [dispatch])
 
 

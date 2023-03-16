@@ -124,7 +124,7 @@ export const CreateTask = () => {
         </div>
     </div>
 }
-export const UpdateTaskTitle = () => {
+/*export const UpdateTaskTitle = () => {
     const [state, setState] = useState<any>(null)
     const [newTitle, setNewTitle] = useState<string>('')
     const [todolistId, setTodolistId] = useState<string>('')
@@ -157,7 +157,7 @@ export const UpdateTaskTitle = () => {
             <button onClick={updateTask}>Update Task</button>
         </div>
     </div>
-}
+}*/
 export const DeleteTask = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
