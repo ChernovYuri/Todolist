@@ -7,14 +7,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Task/Task";
 import {useAppDispatch, useAppSelector} from "../../../app/store";
 import {
-    changeFilterTodolistsAC,
+    changeFilterTodolistAC,
     changeTodoTitleTC,
     deleteTodoTC,
     FilterValuesType,
     TodolistDomainType
 } from "../todolistsReducer";
-import {createTaskTC, getTasksTC} from "../tasksReducer";
-import {TaskType} from "../../../api/todolist-api";
+import {createTaskTC, getTasksTC, TaskDomainType} from "../tasksReducer";
 
 type TodolistPropsType = { /* typing */
     todolist: TodolistDomainType
@@ -30,14 +29,17 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
 
     console.log('Todolist rendering')
 
-    let {id, title, filter} = todolist
+    let {id, title, filter, entityStatus} = todolist
 
     const dispatch = useAppDispatch()
-    let tasks = useAppSelector<TaskType[]>(state => state.tasks[id])
+    let tasks = useAppSelector<TaskDomainType[]>(state => state.tasks[id])
+    let isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
 
-    useEffect(()=>{
-        dispatch(getTasksTC(todolist.id))
-    },[])
+    useEffect(() => {
+        if(isLoggedIn) {
+            dispatch(getTasksTC(todolist.id))
+        }
+        }, [])
 
     const getFilteredTasks = () => {
         switch (filter) {
@@ -53,7 +55,7 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
     // tasks = useMemo(getFilteredTasks,[filter, tasks])
     tasks = getFilteredTasks()
     const tasksItems = tasks.length ?
-        tasks.map((task: TaskType) => {
+        tasks.map((task: TaskDomainType) => {
             return <Task
                 key={task.id}
                 task={task}
@@ -63,7 +65,7 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
         : <span>Here will be your tasks</span>  // условный рендеринг (прелоадинг)/контроль списка на пустоту
 
     const getOnClickSetFilterHandler = useCallback((value: FilterValuesType) => () => {
-        dispatch(changeFilterTodolistsAC(id, value))
+        dispatch(changeFilterTodolistAC(id, value))
     }, [dispatch])
 
     const removeTodolistHandler = useCallback(() => {
@@ -96,12 +98,15 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
         <div className="App">
             <div>
                 <h3>
-                    <EditableSpan oldTitle={title} callBack={updateTodolistHandler}/>
-                    <IconButton aria-label="delete" onClick={removeTodolistHandler}>
+                    <EditableSpan oldTitle={title}
+                                  callBack={updateTodolistHandler}
+                                  isEntityStatusLoading={entityStatus !== 'loading'}/>
+                    <IconButton aria-label="delete" onClick={removeTodolistHandler}
+                                disabled={entityStatus === 'loading'}>
                         <DeleteIcon/>
                     </IconButton>
                 </h3>
-                <AddItemForm callback={addTaskHandler}/>
+                <AddItemForm callback={addTaskHandler} disabled={entityStatus === 'loading'}/>
                 <div>
                     <Button variant={filter === 'all' ? 'outlined' : "contained"} color='success'
                             onClick={getOnClickSetFilterHandler('all')}>All</Button>

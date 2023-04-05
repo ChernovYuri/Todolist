@@ -5,6 +5,7 @@ import {ReduxStoreProviderDecorator} from "../decorators/ReduxStoreProviderDecor
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../app/store";
 import {TaskType} from "../../api/todolist-api";
+import {TaskDomainType} from "../../features/TodolistsList/tasksReducer";
 
 export default {
     taskTitle: 'TODOLIST/Task',
@@ -20,7 +21,7 @@ export default {
 } as ComponentMeta<typeof Task>;
 
 const TaskCopy = () => {
-    const task = useSelector<AppRootStateType, TaskType>(state => state.tasks['todolistId1'][0])
+    const task = useSelector<AppRootStateType, TaskDomainType>(state => state.tasks['todolistId1'][0])
     return <Task task={task} todolistId={'todolistId1'}/>
 }
 

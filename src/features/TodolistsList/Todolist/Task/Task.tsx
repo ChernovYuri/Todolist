@@ -3,12 +3,12 @@ import {SuperCheckbox} from "../../../../components/SuperCheckbox";
 import {EditableSpan} from "../../../../components/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {deleteTaskTC, updateTaskTC} from "../../tasksReducer";
-import {TaskStatuses, TaskType} from "../../../../api/todolist-api";
+import {deleteTaskTC, TaskDomainType, updateTaskTC} from "../../tasksReducer";
+import {TaskStatuses} from "../../../../api/todolist-api";
 import {useAppDispatch} from "../../../../app/store";
 
 type TaskPropsType = {
-    task: TaskType
+    task: TaskDomainType
     todolistId: string
 }
 
@@ -24,6 +24,8 @@ export const Task = memo(({task, todolistId}: TaskPropsType) => {
 
     const updateTaskHandler = useCallback((newTitle: string) => {
         dispatch(updateTaskTC(todolistId, task.id, {title: newTitle}))
+
+
     }, [task.id])
 
     const checkedHandler = () => {
@@ -33,12 +35,14 @@ export const Task = memo(({task, todolistId}: TaskPropsType) => {
     return (
         <li key={task.id}>
             <SuperCheckbox checked={checkedHandler()}
-                           callback={(checkedValue) => changeTaskStatusHandler(checkedValue)}/>
+                           callback={(checkedValue) => changeTaskStatusHandler(checkedValue)}
+                           disabled={task.entityStatus === 'loading'}/>
             <EditableSpan oldTitle={task.title}
                           callBack={updateTaskHandler}
                           taskId={task.id}
-            />
-            <IconButton aria-label="delete" onClick={removeTaskHandler}>
+                          isEntityStatusLoading={task.entityStatus !== 'loading'}/>
+            <IconButton aria-label="delete" onClick={removeTaskHandler}
+                        disabled={task.entityStatus === 'loading'}>
                 <DeleteIcon/>
             </IconButton>
         </li>

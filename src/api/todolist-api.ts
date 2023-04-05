@@ -1,4 +1,7 @@
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
+import {RequestStatusType} from "../app/app-reducer";
+import {ValuesType} from "../features/Login/Login";
+import {number} from "prop-types";
 
 // const settings = {
 //     withCredentials: true
@@ -9,35 +12,57 @@ const instance = axios.create({
 })
 
 // api
+export const authApi = {
+    // for auth
+    login(data: ValuesType) {
+        return instance.post<{data: string}, AxiosResponse<ResponseType<{userId: number}>>, ValuesType>(`/auth/login`, data)
+    },
+    logout() {
+        return instance.delete<ResponseType>(`/auth/login`)
+    },
+     me(){
+        return instance.get<ResponseType<UserDataType>>(`/auth/me`)
+     }
+}
+
 export const todolistApi = {
+    // for todolists
     getTodolists() {
         return instance.get<TodolistType[]>('todo-lists')
     },
     createTodolist(title: string) {
         return instance.post<ResponseType<{ item: TodolistType }>>('todo-lists', {title})
     },
-    updateTodolist(todolistId: string, title: string) {
-        return instance.put<ResponseType>(`todo-lists/${todolistId}`, {title})
-    },
     deleteTodolist(todolistId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}`)
     },
-    /*: Promise<AxiosResponse<{items: TaskType[], totalCount: number, error: any}>>*/
+    updateTodolist(todolistId: string, title: string) {
+        return instance.put<ResponseType>(`todo-lists/${todolistId}`, {title})
+    },
+
+    // for tasks
     getTasks(todolistId: string) {
         return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
+    },
+    deleteTask(todolistId: string, taskId: string) {
+        return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
     },
     createTask(todolistId: string, title: string) {
         return instance.post<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks`, {title})
     },
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
         return instance.put<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
-    },
-    deleteTask(todolistId: string, taskId: string) {
-        return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
     }
 }
 
 // types
+
+type UserDataType = {
+    id: number
+    email: string
+    login: string
+}
+
 export type TodolistType = {
     addedDate: string
     id: string
@@ -49,6 +74,11 @@ export enum TaskStatuses {
     InProgress = 1,
     Completed = 2,
     Draft = 3
+}
+export enum ResultCode {
+    OK = 0,
+    Error = 1,
+    Captcha = 10
 }
 export enum TaskPriorities {
     Low = 0,
@@ -76,6 +106,7 @@ export type UpdateTaskModelType = {
     priority: TaskPriorities
     startDate: string
     deadline: string
+    entityStatus: RequestStatusType
 }
 type GetTasksResponse = {
     error: string | null
@@ -83,7 +114,7 @@ type GetTasksResponse = {
     items: TaskType[]
 }
 // чтобы не дублировать код создаём общий тип с переменным типом data
-type ResponseType<T = {}> = { // {} = дефолтное значение типа T для data
+export type ResponseType<T = {}> = { // {} = дефолтное значение типа T для data
     // PS вместо T могут быть любые символы (буквы и слова)
     data: T
     fieldsErrors: string[]

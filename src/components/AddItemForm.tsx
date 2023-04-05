@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 
 type PropsType = {
     callback: (title: string) => void
+    disabled?: boolean
 }
 
 export const AddItemForm = memo((props: PropsType) => {
@@ -28,7 +29,7 @@ export const AddItemForm = memo((props: PropsType) => {
 
     const onKeyDownAddTaskToDoListHandler = (e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && onClickAddTaskToDoListHandler()
 
-    const errorMessage = error && <div style={{color: 'red'}}>Field is empty</div>
+    // const errorMessage = error && <div style={{color: 'red'}}>Field is empty</div>
 
     const buttonStyles = {
         maxWidth: '40px',
@@ -54,10 +55,13 @@ export const AddItemForm = memo((props: PropsType) => {
                 onChange={onChangeLocalTitleHandler}
                 onKeyDown={onKeyDownAddTaskToDoListHandler}
                 error={error}
+                disabled={props.disabled}
                 // className={error ? 'inputError' : ''}
             />
             {/*<button onClick={onClickAddTaskToDoListHandler}>+</button>*/}
-            <Button variant="contained" style={buttonStyles} onClick={onClickAddTaskToDoListHandler}>+</Button>
+            <Button variant="contained" style={buttonStyles}
+                    onClick={onClickAddTaskToDoListHandler}
+                    disabled={props.disabled}>+</Button>
         </div>
     );
 })

@@ -3,6 +3,7 @@ import React, {ChangeEvent} from 'react';
 type PropsType = {
     checked: boolean
     callback: (checkedValue: boolean)=>void
+    disabled: boolean
 }
 
 export const SuperCheckbox = (props: PropsType) => {
