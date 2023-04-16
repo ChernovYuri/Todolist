@@ -8,7 +8,6 @@ type EditableSpanPropsType = {
 }
 
 export const EditableSpan = memo((props: EditableSpanPropsType) => {
-    console.log('EditableSpan rendering')
     const [edit, setEdit] = useState<boolean>(false)
     const [newTitle, setNewTitle] = useState<string>(props.oldTitle)
     const focusHandler = () => {

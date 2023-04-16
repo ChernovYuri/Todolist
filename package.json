@@ -2,11 +2,13 @@
   "name": "1-lesson",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ChernovYuri.github.io/Todolist",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.4",
+    "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -39,7 +41,9 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "jest:integration": "jest -c integration/jest.config.js",
-    "test:integration": "start-server-and-test storybook http-get://localhost:9009 jest:integration"
+    "test:integration": "start-server-and-test storybook http-get://localhost:9009 jest:integration",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -81,6 +85,7 @@
     "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "gh-pages": "^5.0.0",
     "jest-image-snapshot": "^6.1.0",
     "jest-puppeteer": "^7.0.1",
     "prop-types": "^15.8.1",

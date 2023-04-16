@@ -1,19 +1,17 @@
-import React, {memo, useCallback, useEffect} from "react";
-import {AddItemForm} from "../../../components/AddItemForm";
-import {EditableSpan} from "../../../components/EditableSpan";
+import React, {memo, useCallback} from "react";
+import {AddItemForm} from "common/components/AddItemForm";
+import {EditableSpan} from "common/components/EditableSpan";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Task/Task";
-import {useAppDispatch, useAppSelector} from "../../../app/store";
+import {useAppDispatch, useAppSelector} from "app/store";
 import {
-    changeFilterTodolistAC,
-    changeTodoTitleTC,
-    deleteTodoTC,
-    FilterValuesType,
-    TodolistDomainType
+        FilterValuesType,
+    TodolistDomainType, todolistsActions, todolistsThunks
 } from "../todolistsReducer";
-import {createTaskTC, getTasksTC, TaskDomainType} from "../tasksReducer";
+import {TaskDomainType, tasksThunks} from "../tasksReducer";
+import {selectTasks} from "features/TodolistsList/Todolist/Task/tasks.selectors";
 
 type TodolistPropsType = { /* typing */
     todolist: TodolistDomainType
@@ -26,20 +24,10 @@ type TodolistPropsType = { /* typing */
 // }
 
 export const Todolist = memo(({todolist}: TodolistPropsType) => {
-
-    console.log('Todolist rendering')
-
     let {id, title, filter, entityStatus} = todolist
 
     const dispatch = useAppDispatch()
-    let tasks = useAppSelector<TaskDomainType[]>(state => state.tasks[id])
-    let isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
-
-    useEffect(() => {
-        if(isLoggedIn) {
-            dispatch(getTasksTC(todolist.id))
-        }
-        }, [])
+    const tasks = useAppSelector<TaskDomainType[]>(selectTasks(id))
 
     const getFilteredTasks = () => {
         switch (filter) {
@@ -53,44 +41,33 @@ export const Todolist = memo(({todolist}: TodolistPropsType) => {
     }
     // useMemo запоминает результат работы функции, здесь его использование избыточно, для учебного примера
     // tasks = useMemo(getFilteredTasks,[filter, tasks])
-    tasks = getFilteredTasks()
-    const tasksItems = tasks.length ?
-        tasks.map((task: TaskDomainType) => {
+    const filteredTasks = getFilteredTasks()
+    const tasksItems = filteredTasks.length ?
+        filteredTasks.map((task: TaskDomainType) => {
             return <Task
                 key={task.id}
-                task={task}
                 todolistId={id}
+                task={task}
             />
         })
         : <span>Here will be your tasks</span>  // условный рендеринг (прелоадинг)/контроль списка на пустоту
 
-    const getOnClickSetFilterHandler = useCallback((value: FilterValuesType) => () => {
-        dispatch(changeFilterTodolistAC(id, value))
+    const getOnClickSetFilterHandler = useCallback((filter: FilterValuesType) => () => {
+        dispatch(todolistsActions.changeFilterTodo({todolistId: id, filter}))
     }, [dispatch])
 
     const removeTodolistHandler = useCallback(() => {
-        let action = deleteTodoTC(id)
+        let action = todolistsThunks.deleteTodo(id)
         dispatch(action)
     }, [dispatch])
 
     const addTaskHandler = useCallback((title: string) => {
-        // let newTask = {
-        //     id: v1(),
-        //     title: title,
-        //     status: TaskStatuses.New,
-        //     todoListId: todolist.id,
-        //     description: '',
-        //     startDate: '',
-        //     deadline: '',
-        //     addedDate: '',
-        //     order: 0,
-        //     priority: TaskPriorities.Low
-        // }
-        dispatch(createTaskTC(id, title))
+        let todolistId = id
+        dispatch(tasksThunks.createTask({todolistId, title}))
     }, [dispatch])
 
     const updateTodolistHandler = useCallback((newTitle: string) => {
-        dispatch(changeTodoTitleTC(id, newTitle))
+        dispatch(todolistsThunks.updateTodoTitle({todolistId: id, newTitle}))
     }, [dispatch])
 
 

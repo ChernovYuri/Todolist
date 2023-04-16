@@ -9,9 +9,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import {loginTC} from "./authReducer";
-import {useAppDispatch, useAppSelector} from "../../app/store";
-import {TaskDomainType} from "../TodolistsList/tasksReducer";
+import {useAppDispatch, useAppSelector} from "app/store";
 import {Navigate} from "react-router-dom";
+import {selectIsLoggedIn} from "features/Auth/auth.selectors";
 
 type FormikErrorType = {
     email?: string
@@ -25,9 +25,9 @@ export type ValuesType = {
     rememberMe: boolean
 }
 
-export const Login = () => {
+export const Auth = () => {
     const dispatch = useAppDispatch()
-    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+    const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
 
     const formik = useFormik({

@@ -6,11 +6,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {useAppDispatch, useAppSelector} from "../app/store";
-import {logoutTC, setIsLoggedInAC} from "../features/Login/authReducer";
+import {useAppDispatch, useAppSelector} from "app/store";
+import {logoutTC} from "features/Auth/authReducer";
+import {selectIsLoggedIn} from "features/Auth/auth.selectors";
 
 export default function ButtonAppBar() {
-    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+    const isLoggedIn = useAppSelector(selectIsLoggedIn)
     const dispatch = useAppDispatch()
 
     const logOutHandler = () => {
@@ -18,7 +19,7 @@ export default function ButtonAppBar() {
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
@@ -26,11 +27,11 @@ export default function ButtonAppBar() {
                         edge="start"
                         color="inherit"
                         aria-label="menu"
-                        sx={{ mr: 2 }}
+                        sx={{mr: 2}}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         TODOLIST
                     </Typography>
                     {isLoggedIn && <Button color="inherit" onClick={logOutHandler}>Log out</Button>}

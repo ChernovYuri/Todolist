@@ -1,31 +1,27 @@
 import React, {memo, useCallback} from 'react';
-import {SuperCheckbox} from "../../../../components/SuperCheckbox";
-import {EditableSpan} from "../../../../components/EditableSpan";
+import {SuperCheckbox} from "common/components/SuperCheckbox";
+import {EditableSpan} from "common/components/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {deleteTaskTC, TaskDomainType, updateTaskTC} from "../../tasksReducer";
-import {TaskStatuses} from "../../../../api/todolist-api";
-import {useAppDispatch} from "../../../../app/store";
+import {TaskDomainType, tasksThunks} from "../../tasksReducer";
+import {useAppDispatch} from "app/store";
+import {TaskStatuses} from "common/enums/common.enums";
 
 type TaskPropsType = {
-    task: TaskDomainType
     todolistId: string
+    task: TaskDomainType
 }
 
 export const Task = memo(({task, todolistId}: TaskPropsType) => {
-    console.log('Task rendering')
     const dispatch = useAppDispatch()
 
-    const removeTaskHandler = () => dispatch(deleteTaskTC(todolistId, task.id))
+    const removeTaskHandler = () => dispatch(tasksThunks.deleteTask({todolistId, taskId: task.id}))
 
     const changeTaskStatusHandler = useCallback((checkedValue: boolean) => {
-        dispatch(updateTaskTC(todolistId, task.id, {status: checkedValue ? TaskStatuses.Completed : TaskStatuses.New}))
+        dispatch(tasksThunks.updateTask({todolistId, taskId: task.id, model:{status: checkedValue ? TaskStatuses.Completed : TaskStatuses.New}}))
     }, [task.id])
-
     const updateTaskHandler = useCallback((newTitle: string) => {
-        dispatch(updateTaskTC(todolistId, task.id, {title: newTitle}))
-
-
+        dispatch(tasksThunks.updateTask({todolistId, taskId: task.id, model:{title: newTitle}}))
     }, [task.id])
 
     const checkedHandler = () => {

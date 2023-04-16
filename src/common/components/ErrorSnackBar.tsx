@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, {AlertProps} from '@mui/material/Alert';
-import {useAppDispatch, useAppSelector} from "../app/store";
-import {useEffect} from "react";
-import {setErrorAC} from "../app/app-reducer";
+import {useAppDispatch, useAppSelector} from "app/store";
+import {appActions} from "app/appReducer";
+import {selectError} from "app/app.selectors";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -14,8 +14,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 export const CustomizedSnackbars = () => {
     // const [open, setOpen] = React.useState(false);
-    let error = useAppSelector<string | null>((state) => state.app.error)
-    let dispatch = useAppDispatch()
+    const error = useAppSelector(selectError)
+    const dispatch = useAppDispatch()
 
     // const handleClick = () => {
     //     if (error) {
@@ -27,7 +27,7 @@ export const CustomizedSnackbars = () => {
         if (reason === 'clickaway') {
             return;
         }
-        dispatch(setErrorAC(null))
+        dispatch(appActions.setError({error: null}))
         // setOpen(false);
     };
 

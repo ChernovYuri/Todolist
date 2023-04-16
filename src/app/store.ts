@@ -1,10 +1,11 @@
-import {tasksReducer} from '../features/TodolistsList/tasksReducer';
-import {todolistsReducer} from '../features/TodolistsList/todolistsReducer';
-import {AnyAction, applyMiddleware, combineReducers, legacy_createStore} from 'redux';
-import thunkMiddleware, {ThunkDispatch} from "redux-thunk";
+import {tasksReducer} from 'features/TodolistsList/tasksReducer';
+import {todolistsReducer} from 'features/TodolistsList/todolistsReducer';
+import {AnyAction, combineReducers} from 'redux';
+import {ThunkDispatch} from "redux-thunk";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import {appReducer} from "./app-reducer";
-import {authReducer} from "../features/Login/authReducer";
+import {appReducer} from "app/appReducer";
+import {authReducer} from "features/Auth/authReducer";
+import {configureStore} from "@reduxjs/toolkit";
 
 // объединяя reducer-ы с помощью combineReducers,
 // мы задаём структуру нашего единственного объекта-состояния
@@ -14,8 +15,15 @@ const rootReducer = combineReducers({
     app: appReducer,
     auth: authReducer
 })
-// непосредственно создаём store
-export const store = legacy_createStore(rootReducer, applyMiddleware(thunkMiddleware));
+
+export const store = configureStore({
+    reducer: rootReducer,
+    // thunk middleware идет по умолчанию, поэтому его необязательно добавлять.
+    // Но если/когда понадобится делаем это через .concat(..)
+    // middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk)
+    })
+
+// export const _store = legacy_createStore(rootReducer, applyMiddleware(thunkMiddleware));
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
 

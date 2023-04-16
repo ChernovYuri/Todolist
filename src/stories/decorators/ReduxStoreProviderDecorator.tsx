@@ -1,12 +1,12 @@
 import React from 'react';
-import {AppRootStateType} from "../../app/store";
+import {AppRootStateType} from "app/store";
 import {Provider} from "react-redux";
 import {combineReducers, legacy_createStore} from "redux";
-import {tasksReducer} from "../../features/TodolistsList/tasksReducer";
-import {todolistsReducer} from "../../features/TodolistsList/todolistsReducer";
+import {tasksReducer} from "features/TodolistsList/tasksReducer";
+import {todolistsReducer} from "features/TodolistsList/todolistsReducer";
 import {v1} from 'uuid'
-import {TaskPriorities, TaskStatuses} from "../../api/todolist-api";
-import {appReducer} from "../../app/app-reducer";
+import {appReducer} from "app/appReducer";
+import {TaskPriorities, TaskStatuses} from "common/enums/common.enums";
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
@@ -78,11 +78,11 @@ const initialGlobalState = {
     },
     app: {
         error: null,
-        status: 'loading'
+        status: 'loading',
+        isInitialized: true,
     },
     auth: {
         isLoggedIn: true,
-        isInitialized: true,
     }
 }
 

@@ -1,7 +1,6 @@
 // src/stories/TODOLIST/todolists-api.stories.tsx
 import React, {useEffect, useState} from 'react'
-import axios from "axios";
-import {todolistApi} from "../../api/todolist-api";
+import {todolistApi} from "features/TodolistsList/todolist.api";
 
 export default {
     title: 'API'
@@ -42,8 +41,8 @@ export const UpdateTodolistTitle = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
         const todolistId = ''
-        const title = 'newTitle'
-        todolistApi.updateTodolist(todolistId, title)
+        const newTitle = 'newTitle'
+        todolistApi.updateTodolist({todolistId, newTitle})
             .then((res) => {
                 setState(res.data)
             })
@@ -97,11 +96,11 @@ export const GetTasks = () => {
 }
 export const CreateTask = () => {
     const [state, setState] = useState<any>(null)
-    const [taskTitle, setTaskTitle] = useState<string>('')
+    const [title, setTaskTitle] = useState<string>('')
     const [todolistId, setTodolistId] = useState<string>('')
 
     const createTask = () => {
-        todolistApi.createTask(todolistId, taskTitle)
+        todolistApi.createTask({todolistId, title})
             .then((res) => {
                 setState(res.data)
             })
@@ -116,7 +115,7 @@ export const CreateTask = () => {
                    onChange={(e) => {
                        setTodolistId(e.currentTarget.value)
                    }}/>
-            <input placeholder={'taskTitle'} value={taskTitle}
+            <input placeholder={'taskTitle'} value={title}
                    onChange={(e) => {
                        setTaskTitle(e.currentTarget.value)
                    }}/>
@@ -163,7 +162,7 @@ export const DeleteTask = () => {
     useEffect(() => {
         const todolistId = ''
         const taskId = ''
-        todolistApi.deleteTask(todolistId, taskId)
+        todolistApi.deleteTask({todolistId, taskId})
             .then((res) => {
                 setState(res.data)
             })
