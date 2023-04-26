@@ -45,6 +45,11 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios)/"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -84,6 +89,7 @@
     "@storybook/preset-create-react-app": "^4.1.2",
     "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
+    "@types/yup": "^0.32.0",
     "babel-plugin-named-exports-order": "^0.0.2",
     "gh-pages": "^5.0.0",
     "jest-image-snapshot": "^6.1.0",

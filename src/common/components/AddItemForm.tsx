@@ -1,20 +1,20 @@
-import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
+import React, {ChangeEvent, FC, KeyboardEvent, memo, useState} from 'react';
 import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
 
-type PropsType = {
+type Props = {
     callback: (title: string) => void
     disabled?: boolean
 }
 
-export const AddItemForm = memo((props: PropsType) => {
+export const AddItemForm: FC<Props> = memo(({callback, disabled}) => {
     let [title, setTitle] = useState<string>('')
     let [error, setError] = useState<boolean>(false)
 
     const onClickAddTaskToDoListHandler = () => {
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            props.callback(trimmedTitle)
+            callback(trimmedTitle)
         } else {
             setError(true)
         }
@@ -39,12 +39,6 @@ export const AddItemForm = memo((props: PropsType) => {
 
     return (
         <div>
-            {/*<input
-                value={title}
-                onChange={onChangeLocalTitleHandler}
-                onKeyDown={onKeyDownAddTaskToDoListHandler}
-                className={error ? 'inputError' : ''}
-            />*/}
             <TextField
                 size={"small"}
                 id="standard-basic"
@@ -54,13 +48,11 @@ export const AddItemForm = memo((props: PropsType) => {
                 onChange={onChangeLocalTitleHandler}
                 onKeyDown={onKeyDownAddTaskToDoListHandler}
                 error={error}
-                disabled={props.disabled}
-                // className={error ? 'inputError' : ''}
+                disabled={disabled}
             />
-            {/*<button onClick={onClickAddTaskToDoListHandler}>+</button>*/}
             <Button variant="contained" style={buttonStyles}
                     onClick={onClickAddTaskToDoListHandler}
-                    disabled={props.disabled}>+</Button>
+                    disabled={disabled}>+</Button>
         </div>
     );
 })

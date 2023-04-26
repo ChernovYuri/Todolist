@@ -1,8 +1,4 @@
-import axios, {AxiosResponse} from "axios";
-import {RequestStatusType} from "app/appReducer";
-import {ValuesType} from "features/Auth/Auth";
-import {UpdateDomainTaskModelType} from "features/TodolistsList/tasksReducer";
-import {TaskPriorities, TaskStatuses} from "common/enums/common.enums";
+import axios from "axios";
 
 // const settings = {
 //     withCredentials: true

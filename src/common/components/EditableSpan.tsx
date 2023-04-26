@@ -1,26 +1,26 @@
-import React, {ChangeEvent, memo, useState} from 'react';
+import React, {ChangeEvent, FC, memo, useState} from 'react';
 
-type EditableSpanPropsType = {
+type Props = {
     oldTitle: string
     callBack: (newTitle: string, taskId?: string) => void
     taskId?: string
     isEntityStatusLoading?: boolean
 }
 
-export const EditableSpan = memo((props: EditableSpanPropsType) => {
+export const EditableSpan: FC<Props> = memo(({oldTitle, callBack, taskId, isEntityStatusLoading}) => {
     const [edit, setEdit] = useState<boolean>(false)
-    const [newTitle, setNewTitle] = useState<string>(props.oldTitle)
+    const [newTitle, setNewTitle] = useState<string>(oldTitle)
     const focusHandler = () => {
-        if (props.isEntityStatusLoading) {
+        if (isEntityStatusLoading) {
         setEdit(!edit)
-        setNewTitle(props.oldTitle)
+        setNewTitle(oldTitle)
         if (edit) {
             updateOnBlurHandler()
         }
     }
 }
 const updateOnBlurHandler = () => {
-    props.callBack(newTitle, props.taskId)
+    callBack(newTitle, taskId)
 }
 const onChangeLocalTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
     /* if(e.currentTarget.value.length > 50) {
@@ -32,7 +32,7 @@ const onChangeLocalTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
 return (
     edit
         ? <input onChange={onChangeLocalTitleHandler} autoFocus value={newTitle} onBlur={focusHandler}/>
-        : <span onDoubleClick={focusHandler}>{props.oldTitle}</span>
+        : <span onDoubleClick={focusHandler}>{oldTitle}</span>
 );
 })
 

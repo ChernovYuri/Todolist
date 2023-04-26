@@ -6,16 +6,19 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {useAppDispatch, useAppSelector} from "app/store";
-import {logoutTC} from "features/Auth/authReducer";
+import {useAppSelector} from "common/hooks/useAppSelector";
 import {selectIsLoggedIn} from "features/Auth/auth.selectors";
+import {useNavigate} from "react-router-dom";
+import {authThunks} from "features/Auth/authReducer";
+import {useActions} from "common/hooks/useActions";
 
-export default function ButtonAppBar() {
+export const ButtonAppBar = () => {
     const isLoggedIn = useAppSelector(selectIsLoggedIn)
-    const dispatch = useAppDispatch()
+    const navigate = useNavigate();
+    const {logout} = useActions(authThunks)
 
     const logOutHandler = () => {
-        dispatch(logoutTC())
+        logout()
     }
 
     return (
@@ -32,7 +35,7 @@ export default function ButtonAppBar() {
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                        TODOLIST
+                        <span style={{cursor: 'pointer'}} onClick={()=>{navigate('/')}}>TODOLIST</span>
                     </Typography>
                     {isLoggedIn && <Button color="inherit" onClick={logOutHandler}>Log out</Button>}
                 </Toolbar>

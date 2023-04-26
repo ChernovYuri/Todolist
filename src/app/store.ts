@@ -1,5 +1,5 @@
-import {tasksReducer} from 'features/TodolistsList/tasksReducer';
-import {todolistsReducer} from 'features/TodolistsList/todolistsReducer';
+import {tasksReducer} from 'features/TodolistsList/tasks/tasksReducer';
+import {todolistsReducer} from 'features/TodolistsList/Todolist/todolistsReducer';
 import {AnyAction, combineReducers} from 'redux';
 import {ThunkDispatch} from "redux-thunk";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
@@ -26,11 +26,6 @@ export const store = configureStore({
 // export const _store = legacy_createStore(rootReducer, applyMiddleware(thunkMiddleware));
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
-
-export type AppThunkDispatch = ThunkDispatch<AppRootStateType, any, AnyAction>
-
-export const useAppDispatch = () => useDispatch<AppThunkDispatch>()
-export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector
 
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore

@@ -1,20 +1,22 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, FC} from 'react';
 
-type PropsType = {
+type Props = {
     checked: boolean
     callback: (checkedValue: boolean)=>void
     disabled: boolean
 }
 
-export const SuperCheckbox = (props: PropsType) => {
+export const SuperCheckbox: FC<Props> = ({disabled, checked, callback}) => {
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        props.callback(e.currentTarget.checked)
+        callback(e.currentTarget.checked)
     }
 
     return (
         <input type={'checkbox'}
                onChange={onChangeHandler}
-               checked={props.checked}/>
+               checked={checked}
+               disabled={disabled}
+        />
     );
 };

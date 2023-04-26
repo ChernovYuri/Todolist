@@ -1,24 +1,26 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import ButtonAppBar from "../common/components/ButtonAppBar";
 import Container from '@mui/material/Container';
-import {useAppDispatch, useAppSelector} from "./store";
+import {useAppSelector} from "common/hooks/useAppSelector";
 import {TodolistsList} from "features/TodolistsList/TodolistsList";
 import {CircularProgress, LinearProgress} from "@mui/material";
-import {meTC} from "app/appReducer";
 import {CustomizedSnackbars} from "common/components/ErrorSnackBar";
 import {Auth} from "features/Auth/Auth";
-import {Navigate, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import {selectIsInitialized, selectStatus} from "app/app.selectors";
+import {authThunks} from "features/Auth/authReducer";
+import {useActions} from "common/hooks/useActions";
+import {ButtonAppBar} from "common/components/ButtonAppBar";
 
 function App() {
     const status = useAppSelector(selectStatus)
     const isInitialized = useAppSelector(selectIsInitialized)
-    const dispatch = useAppDispatch()
 
-    useEffect(()=>{
-        dispatch(meTC())
-    },[])
+    const {initializeApp} = useActions(authThunks)
+
+    useEffect(() => {
+        initializeApp()
+    }, [])
 
     if (!isInitialized) {
         return <div
@@ -37,8 +39,9 @@ function App() {
                 <Route path={'/login'} element={<Auth/>}/>
                 <Route path={'/404'} element={
                     <h1>404: PAGE NOT FOUND</h1>
-                } />
-                <Route path='*' element={<Navigate to={'404'}/>} />
+                }/>
+                {/*<Route path='*' element={<Navigate to={'404'}/>}/>*/}
+                <Route path='*' element={<h1>404: PAGE NOT FOUND</h1>}/>
             </Routes>
         </Container>
         </div>

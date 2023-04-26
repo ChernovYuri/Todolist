@@ -1,27 +1,31 @@
-import React, {memo, useCallback} from 'react';
+import React, {FC, memo, useCallback} from 'react';
 import {SuperCheckbox} from "common/components/SuperCheckbox";
 import {EditableSpan} from "common/components/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {TaskDomainType, tasksThunks} from "../../tasksReducer";
-import {useAppDispatch} from "app/store";
+import {TaskDomainType, tasksThunks} from "features/TodolistsList/tasks/tasksReducer";
 import {TaskStatuses} from "common/enums/common.enums";
+import {useActions} from "common/hooks/useActions";
 
-type TaskPropsType = {
+type Props = {
     todolistId: string
     task: TaskDomainType
 }
 
-export const Task = memo(({task, todolistId}: TaskPropsType) => {
-    const dispatch = useAppDispatch()
+export const Task: FC<Props> = memo(({task, todolistId}) => {
+    const {deleteTask, updateTask} = useActions(tasksThunks)
 
-    const removeTaskHandler = () => dispatch(tasksThunks.deleteTask({todolistId, taskId: task.id}))
+    const deleteTaskHandler = () => deleteTask({todolistId, taskId: task.id})
 
     const changeTaskStatusHandler = useCallback((checkedValue: boolean) => {
-        dispatch(tasksThunks.updateTask({todolistId, taskId: task.id, model:{status: checkedValue ? TaskStatuses.Completed : TaskStatuses.New}}))
+        updateTask({
+            todolistId,
+            taskId: task.id,
+            model: {status: checkedValue ? TaskStatuses.Completed : TaskStatuses.New}
+        })
     }, [task.id])
     const updateTaskHandler = useCallback((newTitle: string) => {
-        dispatch(tasksThunks.updateTask({todolistId, taskId: task.id, model:{title: newTitle}}))
+        updateTask({todolistId, taskId: task.id, model: {title: newTitle}})
     }, [task.id])
 
     const checkedHandler = () => {
@@ -37,7 +41,7 @@ export const Task = memo(({task, todolistId}: TaskPropsType) => {
                           callBack={updateTaskHandler}
                           taskId={task.id}
                           isEntityStatusLoading={task.entityStatus !== 'loading'}/>
-            <IconButton aria-label="delete" onClick={removeTaskHandler}
+            <IconButton aria-label="delete" onClick={deleteTaskHandler}
                         disabled={task.entityStatus === 'loading'}>
                 <DeleteIcon/>
             </IconButton>
