@@ -1,68 +1,46 @@
 import {appActions} from "app/appReducer";
 import {createSlice} from "@reduxjs/toolkit";
 import {clearTasksAndTodos} from "common/actions/common.actions";
-import {handleServerAppError} from "common/utils/handleServerAppError";
-import {handleServerNetworkError} from "common/utils/handleServerNetworkError";
 import {authApi, LoginParamsType} from "features/Auth/auth.api";
 import {ResultCode} from "common/enums/common.enums";
 import {createAppAsyncThunk} from "common/utils/createAppAsyncThunk";
 
 const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>
-('auth/login', async (arg, thunkAPI) => {
-    const {dispatch, rejectWithValue} = thunkAPI
-    dispatch(appActions.setAppStatus({status: 'loading'}))
-    try {
-        const res = await authApi.login(arg)
-        if (res.data.resultCode === ResultCode.OK) {
-            dispatch(appActions.setAppStatus({status: 'succeeded'}))
-            return {isLoggedIn: true}
-        } else {
-            handleServerAppError(dispatch, res.data)
-            dispatch(appActions.setAppStatus({status: 'failed'}))
-            return rejectWithValue('error')
-        }
-    } catch (err) {
-        handleServerNetworkError(dispatch, err)
-        return rejectWithValue('error')
+('auth/login', async (arg, {rejectWithValue}) => {
+    const res = await authApi.login(arg)
+    debugger
+    if (res.data.resultCode === ResultCode.OK) {
+        return {isLoggedIn: true}
+    } else if (res.data.resultCode === ResultCode.Captcha) {
+        const isShowAppError = !res.data.fieldsErrors.length
+        alert('Captcha')
+        return rejectWithValue({data: res.data, showGlobalError: isShowAppError})
+    } else {
+        const isShowAppError = !res.data.fieldsErrors.length
+        return rejectWithValue({data: res.data, showGlobalError: isShowAppError})
     }
 })
 
 const logout = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
-('auth/logout', async (arg, thunkAPI) => {
-    const {dispatch, rejectWithValue} = thunkAPI
-    dispatch(appActions.setAppStatus({status: 'loading'}))
-    try {
-        const res = await authApi.logout()
-        if (res.data.resultCode === ResultCode.OK) {
-            dispatch(clearTasksAndTodos())
-            dispatch(appActions.setAppStatus({status: 'succeeded'}))
-            return {isLoggedIn: false}
-        } else {
-            handleServerAppError(dispatch, res.data)
-            return rejectWithValue('error')
-        }
-    } catch (err) {
-        handleServerNetworkError(dispatch, err)
-        return rejectWithValue('error')
+('auth/logout', async (arg, {dispatch, rejectWithValue}) => {
+    const res = await authApi.logout()
+    if (res.data.resultCode === ResultCode.OK) {
+        dispatch(clearTasksAndTodos())
+        return {isLoggedIn: false}
+    } else {
+        return rejectWithValue({data: res.data, showGlobalError: true})
     }
 })
 
-const initializeApp = createAppAsyncThunk<{isLoggedIn: boolean}, void>
-('auth/initializeApp', async (arg, thunkAPI) => {
-    const {dispatch, rejectWithValue} = thunkAPI
-    dispatch(appActions.setAppStatus({status: 'loading'}))
+const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
+('auth/initializeApp', async (arg, {dispatch, rejectWithValue}) => {
     try {
         const res = await authApi.me()
         if (res.data.resultCode === ResultCode.OK) {
-            dispatch(appActions.setAppStatus({status: 'succeeded'}))
             return {isLoggedIn: true}
         } else {
-            handleServerAppError(dispatch, res.data, false)
-            return rejectWithValue('error')
+            return rejectWithValue({data: res.data, showGlobalError: false})
         }
-    } catch (err) {
-        handleServerNetworkError(dispatch, err)
-        return rejectWithValue('error')
     } finally {
         dispatch(appActions.setIsInitialized({isInitialized: true}))
     }
@@ -74,17 +52,16 @@ const slice = createSlice({
     initialState: {
         isLoggedIn: false,
     },
-    reducers: {
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(login.fulfilled, (state, action)=>{
+            .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload.isLoggedIn
             })
-            .addCase(logout.fulfilled, (state, action)=>{
+            .addCase(logout.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload.isLoggedIn
             })
-            .addCase(initializeApp.fulfilled, (state, action)=>{
+            .addCase(initializeApp.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload.isLoggedIn
             })
     }

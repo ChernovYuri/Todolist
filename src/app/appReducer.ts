@@ -20,6 +20,39 @@ const slice = createSlice({
         setIsInitialized: (state: InitialStateType, action: PayloadAction<{ isInitialized: boolean }>) => {
             state.isInitialized = action.payload.isInitialized
         }
+    },
+    extraReducers: builder => {
+        builder
+            .addMatcher((action) => {
+                    return action.type.endsWith('/pending')
+                },
+                (state) => {
+                    state.status = 'loading'
+                })
+            .addMatcher((action) => {
+                    return action.type.endsWith('/rejected')
+                },
+                (state, action) => {
+                debugger
+                    console.log('REJECTED')
+                    const {payload, error} = action
+                    if (payload) {
+                        if (payload.showGlobalError) {
+                            state.error = payload.data.messages.length ? payload.data.messages[0] : 'unknown error'
+                            console.log(state.error)
+                        }
+                    } else {
+                        state.error = error.message ? error.message : 'unknown error'
+                        console.log(state.error)
+                    }
+                    state.status = 'failed'
+                })
+            .addMatcher((action) => {
+                    return action.type.endsWith('/fulfilled')
+                },
+                (state) => {
+                    state.status = 'succeeded'
+                })
     }
 })
 

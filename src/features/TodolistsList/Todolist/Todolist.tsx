@@ -16,16 +16,16 @@ export const Todolist: FC<Props> = memo(({todolist}) => {
 
     const {createTask} = useActions(tasksThunks)
 
-    const createTaskHandler = useCallback((title: string) => {
-        const todolistId = id
-        createTask({todolistId, title})
-    }, [])
+    const createTaskHandler = (title: string) => {
+       // @ts-ignore
+        return createTask({todolistId: todolist.id, title}).unwrap()
+    }
 
     return (
         <div className="App">
             <div>
                 <TodolistTitle key={id} todolist={todolist}/>
-                <AddItemForm callback={createTaskHandler}
+                <AddItemForm addItem={createTaskHandler}
                              disabled={entityStatus === 'loading'}/>
                 <FilterTasksButtons key={id}
                                     filter={filter}

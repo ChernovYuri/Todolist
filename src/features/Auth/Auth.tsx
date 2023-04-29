@@ -14,9 +14,9 @@ import {authThunks} from "features/Auth/authReducer";
 import {LoginParamsType} from "features/Auth/auth.api";
 import {ResponseType} from "common/types/common.types";
 import * as yup from 'yup'
-import {useAppDispatch} from "common/hooks/useAppDispatch";
 import {useAppSelector} from "common/hooks/useAppSelector";
 import {selectStatus} from "app/app.selectors";
+import {useActions} from "common/hooks/useActions";
 
 const validationSchema = yup.object().shape({
     email: yup.string().trim().required('Required').email('Invalid email address'),
@@ -24,9 +24,9 @@ const validationSchema = yup.object().shape({
 })
 
 export const Auth = () => {
-    const dispatch = useAppDispatch()
     const isLoggedIn = useAppSelector(selectIsLoggedIn)
     const appStatus = useAppSelector(selectStatus)
+    const {login} = useActions(authThunks)
 
     const formik = useFormik({
         validationSchema: validationSchema,
@@ -36,7 +36,7 @@ export const Auth = () => {
             rememberMe: false
         },
         onSubmit: (values, formikHelpers: FormikHelpers<LoginParamsType>) => {
-            dispatch(authThunks.login(values))
+            login(values)
                 .unwrap()
                 .catch((reason: ResponseType) => {
                     const {fieldsErrors} = reason

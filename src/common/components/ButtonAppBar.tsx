@@ -18,7 +18,7 @@ export const ButtonAppBar = () => {
     const {logout} = useActions(authThunks)
 
     const logOutHandler = () => {
-        logout()
+        logout({})
     }
 
     return (

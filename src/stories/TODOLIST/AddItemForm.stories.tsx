@@ -1,15 +1,63 @@
+import React from 'react';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import {AddItemForm} from "common/components/AddItemForm";
+
+export default {
+  title: 'Example/AddItemForm',
+  component: AddItemForm,
+  argTypes: {
+    addItem: {
+      action: 'added',
+    },
+  },
+} as ComponentMeta<typeof AddItemForm>;
+
+const Template: ComponentStory<typeof AddItemForm> = (args) => (
+    <AddItemForm {...args} />
+);
+
+export const Default = Template.bind({});
+Default.args = {};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  disabled: true,
+};
+
+// export const WithError = Template.bind({});
+// WithError.args = {
+//   error: 'Title is required',
+// };
+//
+// export const WithValue = Template.bind({});
+// WithValue.args = {
+//   value: 'Buy milk',
+// };
+
+
+
+
+
+/*
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {ComponentMeta, ComponentStory} from '@storybook/react';
-import {AddItemForm} from "../../common/components/AddItemForm";
+import {AddItemForm} from "common/components/AddItemForm";
 import {action} from "@storybook/addon-actions";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+
+
+type HandlerFunction = (title: string) => Promise<void>;
+
+interface AddItemFormProps {
+    addItem: HandlerFunction;
+}
 
 export default {
   taskTitle: 'TODOLIST/AddItemForm',
   component: AddItemForm,
   argTypes: {
-    callback: {
+    addItem: {
       description: 'Button clicked inside form' },
   },
 } as ComponentMeta<typeof AddItemForm>;
@@ -19,7 +67,7 @@ const Template: ComponentStory<typeof AddItemForm> = (args) => <AddItemForm {...
 export const AddItemFormStory = Template.bind({});
 
 AddItemFormStory.args = {
-  callback: action('Button clicked inside form')
+  addItem: action('Button clicked inside form')
 }
 // ERROR STORY
 const ErrorTemplate: ComponentStory<typeof AddItemForm> = (args) =>  {
@@ -30,7 +78,7 @@ const ErrorTemplate: ComponentStory<typeof AddItemForm> = (args) =>  {
   const onClickAddTaskToDoListHandler = () => {
     const trimmedTitle = title.trim()
     if (trimmedTitle) {
-      args.callback(trimmedTitle)
+      args.addItem(trimmedTitle)
     } else {
       setError(true)
     }
@@ -55,12 +103,12 @@ const ErrorTemplate: ComponentStory<typeof AddItemForm> = (args) =>  {
 
   return (
       <div>
-        {/*<input
+        {/!*<input
                 value={title}
                 onChange={onChangeLocalTitleHandler}
                 onKeyDown={onKeyDownAddTaskToDoListHandler}
                 className={error ? 'inputError' : ''}
-            />*/}
+            />*!/}
         <TextField
             size={"small"}
             id="standard-basic"
@@ -72,7 +120,7 @@ const ErrorTemplate: ComponentStory<typeof AddItemForm> = (args) =>  {
             error={error}
             // className={error ? 'inputError' : ''}
         />
-        {/*<button onClick={onClickAddTaskToDoListHandler}>+</button>*/}
+        {/!*<button onClick={onClickAddTaskToDoListHandler}>+</button>*!/}
         <Button variant="contained" style={buttonStyles} onClick={onClickAddTaskToDoListHandler}>+</Button>
       </div>
   );
@@ -81,5 +129,5 @@ const ErrorTemplate: ComponentStory<typeof AddItemForm> = (args) =>  {
 export const AddItemFormErrorStory = ErrorTemplate.bind({});
 
 AddItemFormErrorStory.args = {
-  callback: action('Button clicked inside form')
-}
+  addItem: action('Button clicked inside form')
+}*/

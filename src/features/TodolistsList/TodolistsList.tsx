@@ -1,5 +1,5 @@
 import {todolistsThunks} from "features/TodolistsList/Todolist/todolistsReducer";
-import React, {useCallback, useEffect} from "react";
+import React, {useEffect} from "react";
 import Grid from "@mui/material/Grid";
 import {AddItemForm} from "common/components/AddItemForm";
 import Paper from "@mui/material/Paper";
@@ -10,8 +10,7 @@ import {selectIsLoggedIn} from "features/Auth/auth.selectors";
 import {selectTodolists} from "features/TodolistsList/Todolist/todolists.selectors";
 import {useActions} from "common/hooks/useActions";
 
-
-export const TodolistsList: React.FC = () => {
+export const TodolistsList = () => {
 
     const todolists = useAppSelector(selectTodolists);
     const isLoggedIn = useAppSelector(selectIsLoggedIn)
@@ -19,13 +18,13 @@ export const TodolistsList: React.FC = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            fetchTodos()
+            fetchTodos({})
         }
-    }, [])
+    }, []);
 
-    const addTodolist = useCallback((newTitle: string) => {
-       createTodo(newTitle)
-    }, [])
+    const createTodolistCallback = (title: string) => {
+        return createTodo(title).unwrap();
+    };
 
     if (!isLoggedIn) {
         return <Navigate to='/login'/>
@@ -33,7 +32,7 @@ export const TodolistsList: React.FC = () => {
 
     return <>
         <Grid container style={{padding: '20px'}}>
-            <AddItemForm callback={addTodolist}/>
+            <AddItemForm addItem={createTodolistCallback}/>
         </Grid>
         <Grid container spacing={3}>
             {todolists.map((todolist) => {

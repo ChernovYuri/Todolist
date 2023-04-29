@@ -1,10 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ComponentMeta, ComponentStory} from '@storybook/react';
-import {action} from "@storybook/addon-actions";
-import App from "./App";
-import {Provider} from "react-redux";
-import {store} from "./store";
-import {ReduxStoreProviderDecorator} from "../stories/decorators/ReduxStoreProviderDecorator";
+import {ReduxStoreProviderDecorator} from "stories/decorators/ReduxStoreProviderDecorator";
+import {App} from "app/App";
 
 export default {
     taskTitle: 'TODOLIST/App',
