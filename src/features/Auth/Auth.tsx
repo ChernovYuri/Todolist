@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {FormikHelpers, useFormik} from "formik";
 import {Navigate} from "react-router-dom";
-import {selectIsLoggedIn} from "features/Auth/auth.selectors";
+import {selectCaptchaUrl, selectIsLoggedIn} from "features/Auth/auth.selectors";
 import {authThunks} from "features/Auth/authReducer";
 import {LoginParamsType} from "features/Auth/auth.api";
 import {ResponseType} from "common/types/common.types";
@@ -17,23 +17,28 @@ import * as yup from 'yup'
 import {useAppSelector} from "common/hooks/useAppSelector";
 import {selectStatus} from "app/app.selectors";
 import {useActions} from "common/hooks/useActions";
+import s from "./auth.module.css"
+import {todolistsThunks} from "features/TodolistsList/Todolist/todolistsReducer";
+
 
 const validationSchema = yup.object().shape({
     email: yup.string().trim().required('Required').email('Invalid email address'),
-    password: yup.string().trim().required('Required').min(4, 'Password must has more then 4 symbols')
+    password: yup.string().trim().required('Required').min(4, 'Password must has more then 4 symbols'),
 })
 
 export const Auth = () => {
     const isLoggedIn = useAppSelector(selectIsLoggedIn)
+    const captchaUrl = useAppSelector(selectCaptchaUrl)
     const appStatus = useAppSelector(selectStatus)
-    const {login} = useActions(authThunks)
+    const {login, getCaptcha} = useActions(authThunks)
 
     const formik = useFormik({
         validationSchema: validationSchema,
         initialValues: {
             email: '',
             password: '',
-            rememberMe: false
+            rememberMe: false,
+            captcha: ''
         },
         onSubmit: (values, formikHelpers: FormikHelpers<LoginParamsType>) => {
             login(values)
@@ -47,22 +52,6 @@ export const Auth = () => {
                     }
                 })
         },
-        // validation without YUP:
-        // validate: (values: LoginParamsType) => {
-        //     const errors: Partial<Omit<LoginParamsType, 'captcha'>> = {}
-        //     if (!values.email) {
-        //         errors.email = 'Required'
-        //     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        //         errors.email = 'Invalid email address'
-        //     }
-        //
-        //     if (!values.password) {
-        //         errors.password = 'Required'
-        //     } else if (values.password.length < 4) {
-        //         errors.password = 'Password must has more then 4 symbols'
-        //     }
-        //     return errors
-        // },
     });
 
     if (isLoggedIn) {
@@ -70,37 +59,46 @@ export const Auth = () => {
     }
 
     const handleFillForm = () => {
-        formik.setFieldValue('email', 'free@samuraijs.com');
-        formik.setFieldValue('password', 'free');
+        formik.setFieldValue('email', 'free@samuraijs.com')
+        formik.setFieldValue('password', 'free')
     }
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
             <form onSubmit={formik.handleSubmit}>
                 <FormControl>
+                    {captchaUrl &&
+                        <div className={s.captchaBlock}>
+                            <img src={captchaUrl} alt={'Captcha'}/>
+                            <TextField type='text'
+                                       label="Captcha symbols"
+                                       margin="normal"
+                                       {...formik.getFieldProps('captcha')}
+                            />
+                            {formik.touched.captcha && formik.errors.captcha &&
+                                <div style={{color: 'red'}}>{formik.errors.captcha}</div>}
+                            <Button onClick={()=>getCaptcha({})} >Refresh captcha</Button>
+                        </div>
+                    }
                     <FormLabel>
-                        {/*<p>To log in get registered
-                            <a href={'https://social-network.samuraijs.com/'}
-                               target={'_blank'}> here
-                            </a>
-                        </p>*/}
                         <p>Для авторизации введите следующие данные</p>
-                        {/*<p>or use common test account credentials:</p>*/}
                         <p>демонастрационного аккаунта:</p>
-                        <p>Email: <span onClick={() => { handleFillForm()}}
+                            <p>Email: <span onClick={() => { handleFillForm()}}
                                         title="Нажмите, чтобы заполнить поля автоматически"
-                                        style={{
-                                            cursor: 'pointer',
-                                            textDecoration: 'underline',
-                                            color: 'cornflowerblue'
-                                        }}>free@samuraijs.com</span></p>
-                        <p>Password: <span onClick={() => { handleFillForm()}}
+                                        className={s.freeLogin}
+                                        >
+                            free@samuraijs.com
+                            </span></p>
+                            <p>Password: <span onClick={() => { handleFillForm()}}
                                            title="Нажмите, чтобы заполнить поля автоматически"
-                                           style={{
-                                               cursor: 'pointer',
-                                               textDecoration: 'underline',
-                                               color: 'cornflowerblue'
-                                           }}>free</span></p>
+                                           className={s.freeLogin}
+                            >
+                            free
+                            </span></p>
+                        <p>Также можно создать свой аккаунт, зарегистрировавшись здесь:</p>
+                        <a href={'https://social-network.samuraijs.com/'}
+                           target={'_blank'}> social-network.samuraijs.com
+                        </a>
                     </FormLabel>
                     <FormGroup>
                         <TextField type='text'

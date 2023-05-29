@@ -1,0 +1,13 @@
+.captchaBlock{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.freeLogin{
+    cursor: pointer;
+    text-decoration: underline;
+    color: cornflowerblue;
+}

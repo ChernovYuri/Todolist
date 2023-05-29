@@ -33,8 +33,6 @@ const slice = createSlice({
                     return action.type.endsWith('/rejected')
                 },
                 (state, action) => {
-                debugger
-                    console.log('REJECTED')
                     const {payload, error} = action
                     if (payload) {
                         if (payload.showGlobalError) {

@@ -17,7 +17,6 @@ export const Todolist: FC<Props> = memo(({todolist}) => {
     const {createTask} = useActions(tasksThunks)
 
     const createTaskHandler = (title: string) => {
-       // @ts-ignore
         return createTask({todolistId: todolist.id, title}).unwrap()
     }
 

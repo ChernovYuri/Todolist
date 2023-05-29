@@ -7,6 +7,9 @@ export const authApi = {
     login(data: LoginParamsType) {
         return instance.post<{ data: string }, AxiosResponse<ResponseType<{ userId: number }>>, LoginParamsType>(`/auth/login`, data)
     },
+    getCaptcha() {
+        return instance.get<{ url: string }>(`/security/get-captcha-url`)
+    },
     logout() {
         return instance.delete<ResponseType>(`/auth/login`)
     },

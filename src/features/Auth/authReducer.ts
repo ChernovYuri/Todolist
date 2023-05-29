@@ -1,24 +1,29 @@
-import {appActions} from "app/appReducer";
-import {createSlice} from "@reduxjs/toolkit";
+import {appActions, RequestStatusType} from "app/appReducer";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {clearTasksAndTodos} from "common/actions/common.actions";
 import {authApi, LoginParamsType} from "features/Auth/auth.api";
 import {ResultCode} from "common/enums/common.enums";
 import {createAppAsyncThunk} from "common/utils/createAppAsyncThunk";
 
 const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>
-('auth/login', async (arg, {rejectWithValue}) => {
+('auth/login', async (arg, {dispatch, rejectWithValue}) => {
     const res = await authApi.login(arg)
-    debugger
     if (res.data.resultCode === ResultCode.OK) {
+        dispatch(authActions.setCaptchaUrl())
         return {isLoggedIn: true}
     } else if (res.data.resultCode === ResultCode.Captcha) {
-        const isShowAppError = !res.data.fieldsErrors.length
-        alert('Captcha')
-        return rejectWithValue({data: res.data, showGlobalError: isShowAppError})
+        dispatch(getCaptcha())
+        return rejectWithValue(null);
     } else {
         const isShowAppError = !res.data.fieldsErrors.length
         return rejectWithValue({data: res.data, showGlobalError: isShowAppError})
     }
+})
+
+const getCaptcha = createAppAsyncThunk<{ url: string }, void>
+('/security/get-captcha-url', async (arg, {rejectWithValue}) => {
+    const res = await authApi.getCaptcha()
+    return {url: res.data.url}
 })
 
 const logout = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
@@ -46,13 +51,20 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
     }
 })
 
+const initialState = {
+    isLoggedIn: false,
+    captchaUrl: ''
+}
+
 // slice
 const slice = createSlice({
     name: 'auth',
-    initialState: {
-        isLoggedIn: false,
+    initialState,
+    reducers: {
+        setCaptchaUrl: (state: InitialStateType) => {
+            state.captchaUrl = ''
+        }
     },
-    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
@@ -64,8 +76,15 @@ const slice = createSlice({
             .addCase(initializeApp.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload.isLoggedIn
             })
+            .addCase(getCaptcha.fulfilled, (state, action) => {
+                state.captchaUrl = action.payload.url
+            })
     }
 })
 
 export const authReducer = slice.reducer
-export const authThunks = {login, logout, initializeApp}
+export const authThunks = {login, logout, initializeApp, getCaptcha}
+export const authActions = slice.actions
+
+// types
+export type InitialStateType = typeof initialState

@@ -83,6 +83,7 @@ const initialGlobalState = {
     },
     auth: {
         isLoggedIn: true,
+        captchaUrl: ''
     }
 }
 
